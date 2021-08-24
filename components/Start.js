@@ -21,7 +21,7 @@ export default class Home extends React.Component {
       return Alert.alert('Please enter your name.');
     }
     this.props.navigation.navigate('Chat', {
-      name: `${name}`,
+      name: this.state.name,
       backgroundColor: `${backgroundColor}`,
     });
   };
