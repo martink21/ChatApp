@@ -54,7 +54,7 @@ export default class Chat extends React.Component {
           name: name,
         },
       });
-      this.unsubscribe = this.referenceChatMessages.onSnapshot(this.onCollectionUpdate);
+      this.unsubscribe = this.referenceChatMessages.orderBy("createdAt", "desc").onSnapshot(this.onCollectionUpdate);
       this.referenceMessagesUser = firebase.firestore().collection('messages').where("uid", "==", this.state.uid);
     });
   }
