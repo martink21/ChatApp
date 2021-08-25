@@ -83,7 +83,10 @@ export default class Chat extends React.Component {
         },
       });
     });
-  }
+    this.setState({
+      messages,
+    });
+  };
 
   onSend(messages = []) {
     this.setState(
@@ -122,13 +125,18 @@ export default class Chat extends React.Component {
   };
 
   render() {
-    let name = this.props.route.params.name; // OR ... // let { name } = this.props.route.params;
-    this.props.navigation.setOptions({ title: name });
-
     return (
-      <View style={{ flex: 1 }}>
+      <View
+        style={{
+          flex: 1,
+
+          backgroundColor: this.props.route.params.backgroundColor,
+        }}
+      >
         <GiftedChat
-          renderBubble={this.renderBubble.bind(this)}
+          messages={this.state.messages}
+          renderBubble={this.renderBubble}
+          renderInputToolbar={this.renderInputToolbar.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={this.state.user}
