@@ -38,8 +38,8 @@ export default class Chat extends React.Component {
   }
 
   componentDidMount() {
-    const name = this.props.route.params.username;
-    this.props.navigation.setOptions({ title: name });
+    const {name} = this.props.route.params;
+    this.props.navigation.setOptions({ title: `${name}` });
 
     this.authUnsubscribe = firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
