@@ -51,7 +51,7 @@ export default class Chat extends React.Component {
         user: {
           _id: user.uid,
           name: name,
-        },
+        }
       });
       this.unsubscribe = this.referenceChatMessages.orderBy("createdAt", "desc").onSnapshot(this.onCollectionUpdate);
       this.referenceMessagesUser = firebase.firestore().collection('messages').where("uid", "==", this.state.uid);
@@ -136,7 +136,6 @@ export default class Chat extends React.Component {
         <GiftedChat
           messages={this.state.messages}
           renderBubble={this.renderBubble}
-          renderInputToolbar={this.renderInputToolbar.bind(this)}
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={this.state.user}
