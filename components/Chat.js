@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native';
-import { GiftedChat, Bubble } from 'react-native-gifted-chat';
-import AsyncStorage from '@react-native-community/async-storage';
+import { View, Text, Platform, KeyboardAvoidingView, StyleSheet, AsyncStorage } from 'react-native';
+import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
+//import AsyncStorage from '@react-native-community/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 
 const firebase = require('firebase');
@@ -90,7 +90,6 @@ export default class Chat extends React.Component {
     } else {
       // stop online authentication
       this.authUnsubscribe();
-      this.unsubscribe();
     }
   }
 
