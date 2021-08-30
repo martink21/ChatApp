@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text, Platform, KeyboardAvoidingView, StyleSheet, AsyncStorage } from 'react-native';
+import { View, Text, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 //import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
 
 const firebase = require('firebase');
@@ -126,7 +127,7 @@ export default class Chat extends React.Component {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }), () => {
-      this.addMessages();
+      this.addMessage();
       this.saveMessages();
     });
   }
