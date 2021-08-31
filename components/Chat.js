@@ -1,12 +1,10 @@
 import React from 'react';
-import { View, Text, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { View, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 //import AsyncStorage from '@react-native-community/async-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
-import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
-import { Constants, MapView, Location, Permissions } from 'expo'; 
 
 import CustomActions from './CustomActions';
 
