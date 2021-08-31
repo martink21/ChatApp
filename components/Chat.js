@@ -4,6 +4,11 @@ import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 //import AsyncStorage from '@react-native-community/async-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NetInfo from '@react-native-community/netinfo';
+import * as Location from 'expo-location';
+import MapView from 'react-native-maps';
+import { Constants, MapView, Location, Permissions } from 'expo'; 
+
+import CustomActions from './CustomActions';
 
 const firebase = require('firebase');
 require('firebase/firestore');
@@ -37,6 +42,8 @@ export default class Chat extends React.Component {
         name: "",
       },
       isConnected: false,
+      image: null,
+      location: null
     };
   }
 
@@ -102,16 +109,18 @@ export default class Chat extends React.Component {
       let data = doc.data();
       messages.push({
         _id: data._id,
-        text: data.text,
+        text: data.text || "",
         createdAt: data.createdAt.toDate(),
         user: {
           _id: data.user._id,
           name: data.user.name,
         },
+        image: data.image || null,
+        location: data.location || null
       });
     });
     this.setState({
-      messages,
+      messages
     });
   };
 
@@ -141,6 +150,8 @@ export default class Chat extends React.Component {
       text: message.text,
       createdAt: message.createdAt,
       user: message.user,
+      image: message.image || null,
+      location: message.location || null
     })
   };
 
@@ -168,6 +179,28 @@ export default class Chat extends React.Component {
     )
   };
 
+  renderCustomActions = (props) => <CustomActions {...props} />;
+
+    // Renders Map view
+    renderCustomView(props) {
+      const { currentMessage } = props;
+      if (currentMessage.location) {
+        return (
+          <MapView
+            style={{ width: 150, height: 100, borderRadius: 13, margin: 8 }}
+            region={{
+              latitude: currentMessage.location.latitude,
+              longitude: currentMessage.location.longitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          />
+        );
+      }
+      return null;
+    }
+
+
   //If offline, dont render the input toolbar
   renderInputToolbar(props) {
     if (this.state.isConnected === false) {
@@ -193,6 +226,8 @@ export default class Chat extends React.Component {
           messages={this.state.messages}
           renderInputToolbar={this.renderInputToolbar.bind(this)}
           renderBubble={this.renderBubble}
+          renderActions={this.renderCustomActions}
+          renderCustomView={this.renderCustomView} 
           messages={this.state.messages}
           onSend={(messages) => this.onSend(messages)}
           user={this.state.user}
