@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform, KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { View, Text, Platform, KeyboardAvoidingView, StyleSheet, LogBox } from 'react-native';
 import { GiftedChat, Bubble, InputToolbar } from 'react-native-gifted-chat';
 //import AsyncStorage from '@react-native-community/async-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -9,7 +9,7 @@ import MapView from 'react-native-maps';
 import CustomActions from './CustomActions';
 
 const firebase = require('firebase');
-require('firebase/firestore');
+require('firebase/firestore');  
 
 const firebaseConfig = {
   apiKey: "AIzaSyCDfPPHqhJvYh3h0lEsrDQbPFx-NXe20Z4",
@@ -32,6 +32,14 @@ export default class Chat extends React.Component {
     this.referenceChatMessages = firebase.firestore().collection("messages");
     this.referenceMessageUser = null;
 
+    //ignores the setting a timer warning
+    LogBox.ignoreLogs([
+      'Setting a timer',
+      'Animated.event',
+      'expo-permissions',
+      'useNativeDriver'
+    ]);
+    
     this.state = {
       messages: [],
       uid: 0,
@@ -145,7 +153,7 @@ export default class Chat extends React.Component {
     this.referenceChatMessages.add({
       uid: this.state.uid,
       _id: message._id,
-      text: message.text,
+      text: message.text || "",
       createdAt: message.createdAt,
       user: message.user,
       image: message.image || null,
