@@ -1,4 +1,4 @@
-# Hello World! Chat App
+# ChatApp
 
 This is a chat app built with React Native that gives users the option to share text messages, pictures and location.
 
