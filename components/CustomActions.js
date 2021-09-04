@@ -5,6 +5,7 @@ import * as Permissions from 'expo-permissions'; // depricated but seems to stil
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
 
+
 const firebase = require('firebase');
 require('firebase/firestore');
 
@@ -28,7 +29,7 @@ export default class CustomActions extends React.Component {
         }
       }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   };
 
@@ -43,7 +44,7 @@ export default class CustomActions extends React.Component {
      if (status === "granted") {
        const result = await ImagePicker.launchCameraAsync({
          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-       }).catch((error) => console.log(error));
+       }).catch((error) => console.error(error));
 
        if (!result.cancelled) {
          const imageUrl = await this.uploadImageFetch(result.uri);
@@ -51,37 +52,36 @@ export default class CustomActions extends React.Component {
        }
      }
    } catch (error) {
-     console.log(error.message);
+     console.error(error.message);
    }
  };
 
 //Get Location for location sharing
 getLocation = async () => {
-    try {
-       // Expo asking for permission
-      const { status } = await Permissions.askAsync(Permissions.LOCATION);
-      if (status === "granted") {
-        const result = await Location.getCurrentPositionAsync(
-          {}
-        ).catch((error) => console.log(error));
-        const longitude = JSON.stringify(result.coords.longitude);
-        const altitude = JSON.stringify(result.coords.latitude);
-        if (result) {
-          this.props.onSend({
-            location: {
-              longitude: result.coords.longitude,
-              latitude: result.coords.latitude,
-            },
-          });
-        }
+  try {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status === "granted") {
+      const result = await Location.getLastKnownPositionAsync({
+        accuracy: 6,
+      }).catch((error) => console.error(error));
+      const { longitude, latitude } = result.coords
+      if (result) {
+        this.props.onSend({
+          location: {
+            longitude,
+            latitude
+          },
+        });
       }
-    } catch (error) {
-      console.log(error.message);
     }
-  };
+  } catch (error) {
+    console.error(error.message);
+  }
+};
 
 // Upload images to firebase
 uploadImageFetch = async (uri) => {
+   
   const blob = await new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
@@ -95,14 +95,14 @@ uploadImageFetch = async (uri) => {
     xhr.open("GET", uri, true);
     xhr.send(null);
   });
-
+  
   const imageNameBefore = uri.split("/");
   const imageName = imageNameBefore[imageNameBefore.length - 1];
 
   const ref = firebase.storage().ref().child(`images/${imageName}`);
 
   const snapshot = await ref.put(blob);
-
+  
   blob.close();
 
   return await snapshot.ref.getDownloadURL();
